@@ -104,6 +104,8 @@ public class MainWindow extends javax.swing.JFrame {
 			    		//after rectangles are drawn, need to draw cells on screen
 			    		drawCells();
 			    		break;
+		    		default:
+		    			break;
 		    	}
 		    	numLeftClicks++;
 		    }
@@ -136,6 +138,8 @@ public class MainWindow extends javax.swing.JFrame {
 					    		g.drawOval(mouseX,mouseY,r,r);
 					    		g.fillOval(mouseX,mouseY,r,r);					    		
 			            	}
+				    		break;
+				    	default:
 				    		break;
 			    	}
 			    	numRightClicks++;	
