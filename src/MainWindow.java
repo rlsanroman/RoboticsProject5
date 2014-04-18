@@ -9,13 +9,16 @@
  * @author rosbelsanroman
  */
 
+import java.awt.Frame;
 import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
 import java.awt.Rectangle;
 
 public class MainWindow extends javax.swing.JFrame {
@@ -39,8 +42,28 @@ public class MainWindow extends javax.swing.JFrame {
 	public void drawCells(){
 		Graphics2D g = (Graphics2D) canvasPanel.getGraphics();
 		g.setColor(Color.LIGHT_GRAY);
+		//int rec = 1;
 		for(Rectangle rectangle : rectangles)
 		{
+			//int height = panel.getSize().height;
+			//int width = panel.getSize().width;
+			//int height = panel.getBounds().height;
+			//int width = panel.getBounds().width;
+			int maxX = (int)rectangle.getMaxX();
+			int maxY = (int)rectangle.getMaxY();
+			int minX = (int)rectangle.getMinX();
+			int minY = (int)rectangle.getMinY();
+			
+			//System.out.println("Rectangle " + rec++ + ": ");
+			//System.out.println("Max X = " + maxX);
+			//System.out.println("Max Y = " + maxY);
+			//System.out.println("Min X = " + minX);
+			//System.out.println("Min Y = " + minY);
+			g.drawLine(0,maxY,500,maxY);
+			g.drawLine(0,minY,500,minY);
+			g.drawLine(maxX,0,maxX,500);
+			g.drawLine(minX,0,minX,500);
+			
 			//for every rectangle, draw the cells it composes
 			//need to calculate intersections "rectangle.intersects..." will be useful here
 				//g.drawLine(x1,y1,x2,y2);
