@@ -15,6 +15,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.Line2D;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -43,12 +44,41 @@ public class MainWindow extends javax.swing.JFrame {
 		Graphics2D g = (Graphics2D) canvasPanel.getGraphics();
 		g.setColor(Color.LIGHT_GRAY);
 		//int rec = 1;
+		int MAXX = 0;
+		int MINX = 500;
+		int MAXY = 0;
+		int MINY = 500;
+		canvasPanel.removeAll(); //clear previous rectangles
+		Rectangle bottom = null;
+		Rectangle top = null;
+		for(Rectangle rectangle : rectangles) //get the top most Rectangle/ bottom most Rectangles
+		{
+			int maxX = (int)rectangle.getMaxX();
+			int maxY = (int)rectangle.getMaxY();
+			int minX = (int)rectangle.getMinX();
+			int minY = (int)rectangle.getMinY();
+			
+			if(maxX > MAXX) 
+			{
+				MAXX = maxX;
+			}
+			if(minX < MINX)
+			{
+				MINX = minX;
+			}
+			if(maxY > MAXY)
+			{
+				MAXY = maxY;
+				bottom = rectangle;
+			}
+			if(minY < MINY)
+			{
+				MINY = minY;
+				top = rectangle;
+			}
+		}
 		for(Rectangle rectangle : rectangles)
 		{
-			//int height = panel.getSize().height;
-			//int width = panel.getSize().width;
-			//int height = panel.getBounds().height;
-			//int width = panel.getBounds().width;
 			int maxX = (int)rectangle.getMaxX();
 			int maxY = (int)rectangle.getMaxY();
 			int minX = (int)rectangle.getMinX();
@@ -59,14 +89,44 @@ public class MainWindow extends javax.swing.JFrame {
 			//System.out.println("Max Y = " + maxY);
 			//System.out.println("Min X = " + minX);
 			//System.out.println("Min Y = " + minY);
-			g.drawLine(0,maxY,500,maxY);
-			g.drawLine(0,minY,500,minY);
-			g.drawLine(maxX,0,maxX,500);
-			g.drawLine(minX,0,minX,500);
 			
-			//for every rectangle, draw the cells it composes
-			//need to calculate intersections "rectangle.intersects..." will be useful here
-				//g.drawLine(x1,y1,x2,y2);
+			//g.drawLine(0,maxY,canvasPanel.getSize().width,maxY); //horizontal
+			//g.drawLine(0,minY,canvasPanel.getSize().width,minY); //horizontal
+			g.drawLine(minX,0,minX,canvasPanel.getSize().height); //vertical
+			g.drawLine(maxX,0,maxX,canvasPanel.getSize().height); //vertical
+			
+			
+			/*
+			//NOT WORKING YET
+			Line2D right = new Line2D.Float((float)maxX, 0, (float)maxX, 500);
+			Line2D left = new Line2D.Float((float)minX, 0, (float)minX, 500);
+			
+			//Left Line
+			if(left.intersects(top)) //intersect w top
+				g.drawLine((int)left.getX1(), (int)top.getMaxY() ,(int)left.getX2(), (int)canvasPanel.getSize().getHeight());
+			else
+				g.drawLine((int)left.getX1(),0,(int)left.getX2(),(int)canvasPanel.getSize().getHeight());
+			if(left.intersects(bottom)) //intersect w bottom
+				g.drawLine((int)left.getX1(),0,(int)left.getX2(),(int)bottom.getMaxY());
+			else
+				g.drawLine((int)left.getX1(),0,(int)left.getX2(),(int)canvasPanel.getSize().getHeight());
+			//Right Line
+			if(right.intersects(top)) //intersect w top
+				g.drawLine((int)right.getX1(), (int)top.getMaxY() ,(int)right.getX2(), (int)canvasPanel.getSize().getHeight());
+			else
+				g.drawLine((int)right.getX1(),0,(int)right.getX2(),(int)canvasPanel.getSize().getHeight());
+			if(right.intersects(bottom)) //intersect w top
+				g.drawLine((int)right.getX1(),0,(int)right.getX2(),(int)bottom.getMaxY());
+			else
+				g.drawLine((int)right.getX1(),0,(int)right.getX2(),(int)canvasPanel.getSize().getHeight());
+			*/
+		}
+		
+		//draw rectangles on top of lines
+		g.setColor(Color.GRAY);
+		for(Rectangle rectangle : rectangles) 
+		{
+			g.fillRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
 		}
 	}
 	
