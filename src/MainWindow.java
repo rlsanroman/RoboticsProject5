@@ -21,6 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import java.awt.Rectangle;
+import java.util.Vector;
 
 public class MainWindow extends javax.swing.JFrame {
 
@@ -30,6 +31,7 @@ public class MainWindow extends javax.swing.JFrame {
 	int numRightClicks = 0;
 	Point start = new Point(0,0), end = new Point(0,0);
 	Rectangle[] rectangles = new Rectangle[3];
+	Vector<Line2D> lines = new Vector<Line2D>();
     /**
      * Creates new form MainWindow
      */
@@ -96,11 +98,13 @@ public class MainWindow extends javax.swing.JFrame {
 			g.drawLine(maxX,0,maxX,canvasPanel.getSize().height); //vertical
 			
 			
-			/*
+			
 			//NOT WORKING YET
 			Line2D right = new Line2D.Float((float)maxX, 0, (float)maxX, 500);
 			Line2D left = new Line2D.Float((float)minX, 0, (float)minX, 500);
-			
+			lines.addElement(right);
+			lines.addElement(left);
+			/*
 			//Left Line
 			if(left.intersects(top)) //intersect w top
 				g.drawLine((int)left.getX1(), (int)top.getMaxY() ,(int)left.getX2(), (int)canvasPanel.getSize().getHeight());
@@ -121,7 +125,10 @@ public class MainWindow extends javax.swing.JFrame {
 				g.drawLine((int)right.getX1(),0,(int)right.getX2(),(int)canvasPanel.getSize().getHeight());
 			*/
 		}
-		
+		for(Line2D line : lines)
+		{
+			System.out.println("Line = " + line);
+		}
 		//draw rectangles on top of lines
 		g.setColor(Color.GRAY);
 		for(Rectangle rectangle : rectangles) 
