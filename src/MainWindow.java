@@ -131,7 +131,8 @@ public class MainWindow extends javax.swing.JFrame {
 	}
 	
 	public void drawPath(){
-		//actually calculate the best path to end point here.
+
+	
 	}
 	
     private class mouseEvent 
