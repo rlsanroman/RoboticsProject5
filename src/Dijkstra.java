@@ -5,12 +5,21 @@ import java.util.Collections;
 
 class Vertex implements Comparable<Vertex>
 {
+<<<<<<< HEAD
     public final LocPoint point;
     public ArrayList<Edge> adjacencies = new ArrayList<Edge>();
     public double minDistance = Double.POSITIVE_INFINITY;
     public Vertex previous;
     public Vertex(LocPoint argName) { point = argName; }
     public String toString() { return "(" + point.x + "," + point.y + ")"; }
+=======
+    public final Position point;
+    public ArrayList<Edge> adjacencies = new ArrayList<Edge>();
+    public double minDistance = Double.POSITIVE_INFINITY;
+    public Vertex previous;
+    public Vertex(Position argName) { point = argName; }
+    public String toString() { return point.toString(); }
+>>>>>>> 220268872103a389c2fb5f90ba95ede183b6c9d6
     public int compareTo(Vertex other)
     {
         return Double.compare(minDistance, other.minDistance);
@@ -63,6 +72,7 @@ public class Dijkstra
 
     public static void main(String[] args)
     {	
+<<<<<<< HEAD
         Vertex v0 = new Vertex(new LocPoint (100,100));
         Vertex v1 = new Vertex(new LocPoint(50,50));
         Vertex v2 = new Vertex(new LocPoint(20,20));
@@ -74,6 +84,19 @@ public class Dijkstra
 		v1.adjacencies.add(new Edge(v2,LocPoint.getDistance(v1.point,v2.point)));
 		v2.adjacencies.add(new Edge(v1,LocPoint.getDistance(v2.point,v1.point)));
 		v3.adjacencies.add(new Edge(v0,LocPoint.getDistance(v3.point,v0.point)));
+=======
+        Vertex v0 = new Vertex(new Position(100,100));
+        Vertex v1 = new Vertex(new Position(50,50));
+        Vertex v2 = new Vertex(new Position(20,20));
+        Vertex v3 = new Vertex(new Position(30,30));
+
+        v0.adjacencies.add(new Edge(v1,Position.getDistance(v0.point,v1.point)));
+        v0.adjacencies.add(new Edge(v3,Position.getDistance(v0.point,v3.point)));
+		v1.adjacencies.add(new Edge(v0,Position.getDistance(v1.point,v0.point)));
+		v1.adjacencies.add(new Edge(v2,Position.getDistance(v1.point,v2.point)));
+		v2.adjacencies.add(new Edge(v1,Position.getDistance(v2.point,v1.point)));
+		v3.adjacencies.add(new Edge(v0,Position.getDistance(v3.point,v0.point)));
+>>>>>>> 220268872103a389c2fb5f90ba95ede183b6c9d6
 	
 	Vertex[] vertices = { v0, v1};
         computePaths(v0);
