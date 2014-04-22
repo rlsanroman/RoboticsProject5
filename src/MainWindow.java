@@ -119,7 +119,7 @@ public class MainWindow extends javax.swing.JFrame {
 			 double x4 = rectangle.getMinX();
 			 double y4 = 500;
 			 
-			 midpoints.add(new Position((int)(x3+x4)/2,(int)(y3+y4)/2));
+			 //midpoints.add(new Position((int)(x3+x4)/2,(int)(y3+y4)/2));
 			 
 			//Left lines
 			lines.add(new Line2D.Double(x1,0,x2,y2));
@@ -131,7 +131,7 @@ public class MainWindow extends javax.swing.JFrame {
 			 double x6 = rectangle.getMaxX();
 			 double y6 = rectangle.getMinY();
 			 
-			 midpoints.add(new Position((int)(x5+x6)/2,(int)(y5+y6)/2));
+			 //midpoints.add();
 
 			 // Right line 2
 			 double x7 = rectangle.getMaxX();
@@ -139,7 +139,7 @@ public class MainWindow extends javax.swing.JFrame {
 			 double x8 = rectangle.getMaxX();
 			 double y8 = 500; 
 			 
-			 midpoints.add(new Position((int)(x7+x8)/2,(int)(y7+y8)/2));
+			 //midpoints.add(new Position((int)(x7+x8)/2,(int)(y7+y8)/2));
 			 			
 			//Right lines
 			lines.add(new Line2D.Double(x5,y5,x6,y6));
@@ -287,6 +287,11 @@ public class MainWindow extends javax.swing.JFrame {
 					g.drawLine((int)rightbottom.getX1(),(int)rightbottom.getY1(),(int)rightbottom.getX2(),(int)rightbottom.getY2());
 					rightbottom.setLine(rightbottom.getX1(),rightbottom.getY1(),rightbottom.getX2(),middle.getMinY());
 				}
+			
+			midpoints.add(new Position((int)(lefttop.getX1()+lefttop.getX2())/2,(int)(lefttop.getY1() + lefttop.getY2())/2));
+			midpoints.add(new Position((int)(righttop.getX1()+righttop.getX2())/2,(int)(righttop.getY1() + righttop.getY2())/2));
+			midpoints.add(new Position((int)(leftbottom.getX1()+leftbottom.getX2())/2,(int)(leftbottom.getY1() + leftbottom.getY2())/2));
+			midpoints.add(new Position((int)(rightbottom.getX1()+rightbottom.getX2())/2,(int)(rightbottom.getY1() + rightbottom.getY2())/2));
 
 		}
 		for(Line2D line : lines)
