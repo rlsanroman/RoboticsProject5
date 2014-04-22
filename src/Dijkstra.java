@@ -5,11 +5,11 @@ import java.util.Collections;
 
 class Vertex implements Comparable<Vertex>
 {
-    public final Point point;
+    public final Position point;
     public ArrayList<Edge> adjacencies = new ArrayList<Edge>();
     public double minDistance = Double.POSITIVE_INFINITY;
     public Vertex previous;
-    public Vertex(Point argName) { point = argName; }
+    public Vertex(Position argName) { point = argName; }
     public String toString() { return "(" + point.x + "," + point.y + ")"; }
     public int compareTo(Vertex other)
     {
@@ -63,17 +63,17 @@ public class Dijkstra
 
     public static void main(String[] args)
     {	
-        Vertex v0 = new Vertex(new Point(100,100));
-        Vertex v1 = new Vertex(new Point(50,50));
-        Vertex v2 = new Vertex(new Point(20,20));
-        Vertex v3 = new Vertex(new Point(30,30));
+        Vertex v0 = new Vertex(new Position(100,100));
+        Vertex v1 = new Vertex(new Position(50,50));
+        Vertex v2 = new Vertex(new Position(20,20));
+        Vertex v3 = new Vertex(new Position(30,30));
 
-        v0.adjacencies.add(new Edge(v1,Point.getDistance(v0.point,v1.point)));
-        v0.adjacencies.add(new Edge(v3,Point.getDistance(v0.point,v3.point)));
-		v1.adjacencies.add(new Edge(v0,Point.getDistance(v1.point,v0.point)));
-		v1.adjacencies.add(new Edge(v2,Point.getDistance(v1.point,v2.point)));
-		v2.adjacencies.add(new Edge(v1,Point.getDistance(v2.point,v1.point)));
-		v3.adjacencies.add(new Edge(v0,Point.getDistance(v3.point,v0.point)));
+        v0.adjacencies.add(new Edge(v1,Position.getDistance(v0.point,v1.point)));
+        v0.adjacencies.add(new Edge(v3,Position.getDistance(v0.point,v3.point)));
+		v1.adjacencies.add(new Edge(v0,Position.getDistance(v1.point,v0.point)));
+		v1.adjacencies.add(new Edge(v2,Position.getDistance(v1.point,v2.point)));
+		v2.adjacencies.add(new Edge(v1,Position.getDistance(v2.point,v1.point)));
+		v3.adjacencies.add(new Edge(v0,Position.getDistance(v3.point,v0.point)));
 	
 	Vertex[] vertices = { v0, v1};
         computePaths(v0);
