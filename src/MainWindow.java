@@ -32,6 +32,7 @@ public class MainWindow extends javax.swing.JFrame {
 	Point start = new Point(0,0), end = new Point(0,0);
 	Rectangle[] rectangles = new Rectangle[3];
 	Vector<Line2D> lines = new Vector<Line2D>();
+	Vector<Rectangle> newRectangles = new Vector<Rectangle>();
     /**
      * Creates new form MainWindow
      */
@@ -94,6 +95,9 @@ public class MainWindow extends javax.swing.JFrame {
 			
 			//g.drawLine(0,maxY,canvasPanel.getSize().width,maxY); //horizontal
 			//g.drawLine(0,minY,canvasPanel.getSize().width,minY); //horizontal
+			
+			//newRectangles.addElement(new Rectangle(minX,0,minX,canvasPanel.getSize().height)); //Something 
+			//newRectangles.addElement(new Rectangle(minX,0,minX,canvasPanel.getSize().height));
 			g.drawLine(minX,0,minX,canvasPanel.getSize().height); //vertical
 			g.drawLine(maxX,0,maxX,canvasPanel.getSize().height); //vertical
 			
