@@ -285,7 +285,7 @@ public class MainWindow extends javax.swing.JFrame {
 				}
 				else{
 					g.drawLine((int)rightbottom.getX1(),(int)rightbottom.getY1(),(int)rightbottom.getX2(),(int)rightbottom.getY2());
-					rightbottom.setLine(rightbottom.getX1(),rightbottom.getY1(),rightbottom.getX2(),middle.getMinY());
+					rightbottom.setLine(rightbottom.getX1(),rightbottom.getY1(),rightbottom.getX2(),rightbottom.getY2());
 				}
 			
 			midpoints.add(new Position((int)(lefttop.getX1()+lefttop.getX2())/2,(int)(lefttop.getY1() + lefttop.getY2())/2));
