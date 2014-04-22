@@ -188,8 +188,6 @@ public class MainWindow extends javax.swing.JFrame {
 			//g.drawLine(maxX,0,maxX,canvasPanel.getSize().height); //vertical
 			
 			//Generate Points:
-			LocPoint toppoint = new LocPoint((maxX + minX) / 2, (minY + 0) / 2);
-			LocPoint bottompoint = new LocPoint((maxX + minX) / 2, (maxY + (int)canvasPanel.getSize().getHeight()) / 2);
 			//toppoint.drawPoint(g);
 			//bottompoint.drawPoint(g);
 			
