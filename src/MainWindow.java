@@ -36,7 +36,6 @@ public class MainWindow extends javax.swing.JFrame {
 	Vector<Position> midpoints = new Vector<Position>();
 	ArrayList<Vertex> vertices = new ArrayList<Vertex>();
 	ArrayList<Line2D> connections = new ArrayList<Line2D>();
-	Dijkstra dijkstra = new Dijkstra();
     /**
      * Creates new form MainWindow
      */
@@ -54,6 +53,10 @@ public class MainWindow extends javax.swing.JFrame {
 		{
 			if(pos.x > 500 || pos.y > 500)
 				continue;
+			if(pos.equals(start))
+				System.out.println("HI");
+			if(pos.equals(end))
+				System.out.println("HI");
 			ArrayList<Position> neighbors = pos.findLeftRightPoints(midpoints);
 			Vertex v = new Vertex(pos);
 			ArrayList<Edge> edges = new ArrayList<Edge>();
@@ -179,7 +182,7 @@ public class MainWindow extends javax.swing.JFrame {
 		}
 		System.out.println("MidPoints = " + midpoints);
 		System.out.println("Size = " + midpoints.size());
-		this.getAdjacentMidPoints();
+		//this.getAdjacentMidPoints();
 		this.drawConnections();
 		System.out.println("HERE");
 	}
@@ -205,9 +208,20 @@ public class MainWindow extends javax.swing.JFrame {
 				dest = vertex;
 		}
 		Dijkstra.computePaths(source);
-		List<Vertex> path = dijkstra.getShortestPathTo(dest);
+		List<Vertex> path = Dijkstra.getShortestPathTo(dest);
 		System.out.println("Path = " + path);
 	}
+	
+    public void drawMidPoints()                    
+    {
+    	Graphics2D g = (Graphics2D) canvasPanel.getGraphics();
+    	g.setColor(Color.DARK_GRAY);
+    	for(Position point : midpoints)
+    	{
+    		if(!point.equals(start) || !point.equals(end))
+    			g.fillOval(point.x,point.y,5,5);
+    	}
+    }
 	
     private class mouseEvent 
 	implements MouseListener{
@@ -289,7 +303,6 @@ public class MainWindow extends javax.swing.JFrame {
 			            case 1:
 				    		//draw end point
 			            	end.setLocation(mouseX,mouseY);
-			            	getAdjacentMidPoints();
 			            	if (rectangles[2].contains(end) || rectangles[1].contains(end) || rectangles[0].contains(end)){
 			            		numRightClicks--;
 			            	}
@@ -309,8 +322,10 @@ public class MainWindow extends javax.swing.JFrame {
 		    }
 		    
 			if(numRightClicks >= 2 && numLeftClicks >= 3){
+				getAdjacentMidPoints();
 				drawConnections();
 				drawPath();
+				drawMidPoints();
 			}
 		}
 		
@@ -321,7 +336,7 @@ public class MainWindow extends javax.swing.JFrame {
 	
 	}
 	
-                           
+
 
     /**
      * @param args the command line arguments
