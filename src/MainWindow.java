@@ -18,6 +18,7 @@ import java.awt.event.MouseListener;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
 
@@ -53,6 +54,7 @@ public class MainWindow extends javax.swing.JFrame {
 	
 	public void getAdjacentMidPoints()
 	{
+		ArrayList<Vertex> tempVertices = new ArrayList<Vertex>();
 		vertices.clear();
 		for(Position pos : midpoints)
 		{
@@ -72,13 +74,23 @@ public class MainWindow extends javax.swing.JFrame {
 				}
 				if(!intersects)
 				{
+					if(v.point.equals(end))
+					{
+						System.out.println("HERE");
+					}
 					v.adjacencies.add(new Edge(v1,Position.getDistance(v.point, v1.point)));
 					v1.adjacencies.add(new Edge(v,Position.getDistance(v1.point,v.point)));
 					connections.add(line);
 				}
 			}
-			vertices.add(v);
+			tempVertices.add(v);
 		}
+		for(Vertex v : tempVertices)
+		{
+			if(!vertices.contains(v))
+				vertices.add(v);
+		}
+		System.out.println("HI");
 	}
 
 	public void drawCells(){
@@ -326,6 +338,7 @@ public class MainWindow extends javax.swing.JFrame {
 				dest = vertex;
 		}
 		Dijkstra.computePaths(source);
+		
 		List<Vertex> path = Dijkstra.getShortestPathTo(dest);
 		System.out.println("Path = " + path);
 	}
@@ -443,7 +456,7 @@ public class MainWindow extends javax.swing.JFrame {
 				getAdjacentMidPoints();
 				drawConnections();
 				drawPath();
-				drawMidPoints();
+				//drawMidPoints();
 			}
 		}
 		

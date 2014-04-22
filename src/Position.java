@@ -1,4 +1,7 @@
 import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -67,24 +70,6 @@ public class Position {
 				}
 			}
 		}
-		/*
-		if(closestRight != null)
-			neighbors.add(closestRight);
-		if(closestLeft != null)
-		neighbors.add(closestLeft);
-		for(Position pos : positions)
-		{
-			if(closestRight != null)
-				if(pos.x == closestRight.x && !pos.equals(closestRight))
-				{
-					neighbors.add(pos);
-				}
-			if(closestLeft != null)
-				if(pos.x == closestLeft.x && !pos.equals(closestLeft))
-				{
-					neighbors.add(pos);
-				}
-		}*/
 		return neighbors;
 	}
 	
@@ -112,4 +97,53 @@ public class Position {
 		}
 		return minDist;
 	}
+	
+
+	public ArrayList<Position> findLeftRightPoints(Vector<Position> positions, Rectangle[] rectangles)
+	{
+		int closestLeftX = Integer.MAX_VALUE;
+		int closestRightX = Integer.MAX_VALUE;
+		Position closestLeft = null;
+		Position closestRight = null;
+		ArrayList<Position> neighbors = new ArrayList<Position>();
+		for(Position pos : positions)
+		{
+			if(this.x == pos.x) //same line
+				continue;
+			if(pos.x > 500 || pos.y > 500)
+				continue;
+			int dist = Math.abs(pos.x - this.x);
+			/*
+			Line2D line = new Line2D.Double(new Point2D.Double(this.x,this.y), new Point2D.Double(pos.x,pos.y));
+			boolean intersects = false;
+			for(Rectangle rec : rectangles)
+			{
+				if(rec.intersectsLine(line))
+					intersects = true;
+			}
+			if(!intersects)
+			{*/
+			if(pos.x < this.x) //temp is to the left
+			{
+				if(dist <= closestLeftX)
+				{
+					closestLeftX = dist;
+					closestLeft = pos;
+					neighbors.add(closestLeft);
+				}
+			}
+			else if(pos.x > this.x) //temp is to the right
+			{
+				if(dist <= closestRightX)
+				{
+					closestRightX = dist;
+					closestRight = pos;
+					neighbors.add(closestRight);
+				}
+			}
+			//}
+		}
+		return neighbors;
+	}
+
 }

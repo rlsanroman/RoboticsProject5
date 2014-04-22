@@ -16,6 +16,12 @@ class Vertex implements Comparable<Vertex>
     {
         return Double.compare(minDistance, other.minDistance);
     }
+    public boolean equals(Vertex v)
+    {
+    	if(this.point.equals(v.point))
+    		return true;
+    	return false;
+    }
 }
 
 class Edge
