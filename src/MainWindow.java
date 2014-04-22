@@ -21,7 +21,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import java.awt.Rectangle;
+import java.util.Collections;
 import java.util.Vector;
+
 
 public class MainWindow extends javax.swing.JFrame {
 
@@ -43,6 +45,17 @@ public class MainWindow extends javax.swing.JFrame {
         //this.setTitle("Cell Decomposition");
     }
 	
+	public void calcMiddle(){
+		Collections.sort(lines, new LineComp());
+		Graphics2D g = (Graphics2D) canvasPanel.getGraphics();
+		for(int i=0; i<lines.size(); i+=2){
+				//Rectangle newrectlow = new Rectangle((int)lines.elementAt(i).getX1(), (int)lines.elementAt(i + 2).getX1(), 20, 20);
+				//g.fillRect((int)lines.elementAt(i).getX2(), (int)lines.elementAt(i).getY1(), (int) (lines.elementAt(i+2).getX1() - lines.elementAt(i).getX1()), 20);
+				//Rectangle newrecthigh = new Rectangle((int)lines.elementAt(i).getX1(), (int)lines.elementAt(i + 2).getX1(), 20, 20);
+				//g.fillRect((int)lines.elementAt(i+1).getX1(), (int)lines.elementAt(i+1).getY1(), (int) (lines.elementAt(i+3).getX1() - lines.elementAt(i+1).getX1()), 20);
+		}
+	}
+	
 	public void drawCells(){
 		Graphics2D g = (Graphics2D) canvasPanel.getGraphics();
 		g.setColor(Color.LIGHT_GRAY);
@@ -54,6 +67,7 @@ public class MainWindow extends javax.swing.JFrame {
 		canvasPanel.removeAll(); //clear previous rectangles
 		Rectangle bottom = null;
 		Rectangle top = null;
+		Rectangle middle = null;
 		for(Rectangle rectangle : rectangles) //get the top most Rectangle/ bottom most Rectangles
 		{
 			int maxX = (int)rectangle.getMaxX();
@@ -82,6 +96,13 @@ public class MainWindow extends javax.swing.JFrame {
 		}
 		for(Rectangle rectangle : rectangles)
 		{
+			if(rectangle != top && rectangle != bottom){
+				middle = rectangle;
+			}
+		}
+		
+		for(Rectangle rectangle : rectangles)
+		{
 			int maxX = (int)rectangle.getMaxX();
 			int maxY = (int)rectangle.getMaxY();
 			int minX = (int)rectangle.getMinX();
@@ -98,40 +119,108 @@ public class MainWindow extends javax.swing.JFrame {
 			
 			//newRectangles.addElement(new Rectangle(minX,0,minX,canvasPanel.getSize().height)); //Something 
 			//newRectangles.addElement(new Rectangle(minX,0,minX,canvasPanel.getSize().height));
-			g.drawLine(minX,0,minX,canvasPanel.getSize().height); //vertical
-			g.drawLine(maxX,0,maxX,canvasPanel.getSize().height); //vertical
+			//g.drawLine(minX,0,minX,canvasPanel.getSize().height); //vertical
+			//g.drawLine(maxX,0,maxX,canvasPanel.getSize().height); //vertical
 			
-			
+			//Generate Points:
+			LocPoint toppoint = new LocPoint((maxX + minX) / 2, (minY + 0) / 2);
+			LocPoint bottompoint = new LocPoint((maxX + minX) / 2, (maxY + (int)canvasPanel.getSize().getHeight()) / 2);
+			//toppoint.drawPoint(g);
+			//bottompoint.drawPoint(g);
 			
 			//NOT WORKING YET
-			Line2D right = new Line2D.Float((float)maxX, 0, (float)maxX, 500);
-			Line2D left = new Line2D.Float((float)minX, 0, (float)minX, 500);
-			lines.addElement(right);
-			lines.addElement(left);
+			Line2D righttop = new Line2D.Float((float)maxX, minY, (float)maxX, 0);
+			Line2D rightbottom = new Line2D.Float((float)maxX, maxY, (float)maxX, 500);
+			Line2D leftbottom = new Line2D.Float((float)minX, maxY, (float)minX, 500);
+			Line2D lefttop = new Line2D.Float((float)minX, minY, (float)minX, 0);
+			lines.addElement(righttop);
+			lines.addElement(rightbottom);
+			lines.addElement(lefttop);
+			lines.addElement(leftbottom);
 			
 			//Left Line
-			if(left.intersects(top)) //intersect w top
-				g.drawLine((int)left.getX1(), (int)top.getMaxY() ,(int)left.getX2(), (int)canvasPanel.getSize().getHeight());
+			if(lefttop.intersects(top) && rectangle != top){ //intersect w top
+				if(lefttop.intersects(middle) && rectangle != middle){ //intersects with both middle and top
+					g.drawLine((int)lefttop.getX1(), (int)rectangle.getMinY() ,(int)lefttop.getX2(), (int)middle.getMaxY());
+					lefttop.setLine(lefttop.getX1(), rectangle.getMinY(), lefttop.getX2(), middle.getMaxY());
+				}
+				else{
+					g.drawLine((int)lefttop.getX1(), (int)rectangle.getMinY() ,(int)lefttop.getX2(), (int)top.getMaxY());
+					lefttop.setLine(lefttop.getX1(), rectangle.getMinY(), lefttop.getX2(), top.getMaxY());
+				}
+			}
+			else{
+				//Rectangle newrectangle = new Rectangle((int)lefttop.getX1(), (int)top.getMaxY(), (int)(top.getMaxX() - lefttop.getX1()), (int)(rectangle.getMinY() - top.getMaxY()));
+				if(lefttop.intersects(middle) && rectangle != middle){ //intersects with both middle and top
+					g.drawLine((int)lefttop.getX1(), (int)rectangle.getMinY() ,(int)lefttop.getX2(), (int)middle.getMaxY());
+					lefttop.setLine(lefttop.getX1(), rectangle.getMinY(), lefttop.getX2(), middle.getMaxY());
+				}
+				else{
+					g.drawLine((int)lefttop.getX1(),(int) lefttop.getY1(),(int)lefttop.getX2(),(int)lefttop.getY2());
+					lefttop.setLine(lefttop.getX1(), lefttop.getY1(), lefttop.getX2(), lefttop.getY2());
+				}
+			}
+			if(leftbottom.intersects(bottom) && rectangle != bottom){ //intersect w bottom
+				if(leftbottom.intersects(middle) && rectangle != middle){ //intersects with both middle and top
+					g.drawLine((int)leftbottom.getX1(),(int) leftbottom.getY1(),(int)leftbottom.getX2(),(int)middle.getMinY());
+					leftbottom.setLine(leftbottom.getX1(), leftbottom.getY1(), leftbottom.getX2(), middle.getMinY());
+				}
+				else{
+					g.drawLine((int)leftbottom.getX1(),(int) leftbottom.getY1(),(int)leftbottom.getX2(),(int)bottom.getMinY());
+					leftbottom.setLine(leftbottom.getX1(), leftbottom.getY1(), leftbottom.getX2(), bottom.getMinY());
+				}
+			}
 			else
-				g.drawLine((int)left.getX1(),0,(int)left.getX2(),(int)canvasPanel.getSize().getHeight());
-			if(left.intersects(bottom)) //intersect w bottom
-				g.drawLine((int)left.getX1(),0,(int)left.getX2(),(int)bottom.getMaxY());
-			else
-				g.drawLine((int)left.getX1(),0,(int)left.getX2(),(int)canvasPanel.getSize().getHeight());
+				if(leftbottom.intersects(middle) && rectangle != middle){ //intersects with both middle and top
+					g.drawLine((int)leftbottom.getX1(),(int) leftbottom.getY1(),(int)leftbottom.getX2(),(int)middle.getMinY());
+					leftbottom.setLine(leftbottom.getX1(), leftbottom.getY1(), leftbottom.getX2(), middle.getMinY());
+				}
+				else{
+					g.drawLine((int)leftbottom.getX1(),(int)leftbottom.getY1(),(int)leftbottom.getX2(),(int)leftbottom.getY2());
+					leftbottom.setLine(leftbottom.getX1(), leftbottom.getY1(), leftbottom.getX2(), leftbottom.getY2());
+				}
 			//Right Line
-			if(right.intersects(top)) //intersect w top
-				g.drawLine((int)right.getX1(), (int)top.getMaxY() ,(int)right.getX2(), (int)canvasPanel.getSize().getHeight());
+			if(righttop.intersects(top) && rectangle != top) //intersect w top
+				if(righttop.intersects(middle) && rectangle != middle){ //intersects with both middle and top
+					g.drawLine((int)righttop.getX1(), (int)rectangle.getMinY() ,(int)righttop.getX2(), (int)middle.getMaxY());
+					righttop.setLine(righttop.getX1(),rectangle.getMinY(),righttop.getX2(),middle.getMaxY());
+				}
+				else{
+					g.drawLine((int)righttop.getX1(), (int)rectangle.getMinY() ,(int)righttop.getX2(), (int)top.getMaxY());
+					righttop.setLine(righttop.getX1(),rectangle.getMinY(),righttop.getX2(),top.getMaxY());
+				}
 			else
-				g.drawLine((int)right.getX1(),0,(int)right.getX2(),(int)canvasPanel.getSize().getHeight());
-			if(right.intersects(bottom)) //intersect w top
-				g.drawLine((int)right.getX1(),0,(int)right.getX2(),(int)bottom.getMaxY());
+				if(righttop.intersects(middle) && rectangle != middle){ //intersects with both middle and top
+					g.drawLine((int)righttop.getX1(), (int)rectangle.getMinY() ,(int)righttop.getX2(), (int)middle.getMaxY());
+					righttop.setLine(righttop.getX1(),righttop.getY1(),righttop.getX2(),middle.getMaxY());
+				}
+				else{
+					g.drawLine((int)righttop.getX1(),(int) righttop.getY1(),(int)righttop.getX2(),(int)righttop.getY2());
+					righttop.setLine(righttop.getX1(),righttop.getY1(),righttop.getX2(),righttop.getY2());
+				}
+			if(rightbottom.intersects(bottom) && rectangle != bottom){ //intersect w bottom
+				if(rightbottom.intersects(middle) && rectangle != middle){
+					g.drawLine((int)rightbottom.getX1(),(int) rightbottom.getY1(),(int)rightbottom.getX2(),(int)middle.getMinY());
+					rightbottom.setLine(rightbottom.getX1(),rightbottom.getY1(),rightbottom.getX2(),middle.getMinY());
+				}
+				else{
+					g.drawLine((int)rightbottom.getX1(),(int) rightbottom.getY1(),(int)rightbottom.getX2(),(int)bottom.getMinY());
+					rightbottom.setLine(rightbottom.getX1(),rightbottom.getY1(),rightbottom.getX2(),bottom.getMinY());
+				}
+			}
 			else
-				g.drawLine((int)right.getX1(),0,(int)right.getX2(),(int)canvasPanel.getSize().getHeight());
-			
+				if(rightbottom.intersects(middle) && rectangle != middle){
+					g.drawLine((int)rightbottom.getX1(),(int) rightbottom.getY1(),(int)rightbottom.getX2(),(int)middle.getMinY());
+					rightbottom.setLine(rightbottom.getX1(),rightbottom.getY1(),rightbottom.getX2(),middle.getMinY());
+				}
+				else{
+					g.drawLine((int)rightbottom.getX1(),(int)rightbottom.getY1(),(int)rightbottom.getX2(),(int)rightbottom.getY2());
+					rightbottom.setLine(rightbottom.getX1(),rightbottom.getY1(),rightbottom.getX2(),middle.getMinY());
+				}
 		}
 		for(Line2D line : lines)
 		{
-			System.out.println("Line = " + line);
+			System.out.println("Line: x=" + line.getX1() + " y=" + line.getY1());
 		}
 		//draw rectangles on top of lines
 		g.setColor(Color.GRAY);
@@ -139,6 +228,12 @@ public class MainWindow extends javax.swing.JFrame {
 		{
 			g.fillRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
 		}
+		//g.setColor(Color.blue);
+		g.fillRect(bottom.x, bottom.y, bottom.width, bottom.height);
+		//g.setColor(Color.red);
+		g.fillRect(top.x, top.y, top.width, top.height);
+		calcMiddle();
+
 	}
 	
 	public void drawPath(){
