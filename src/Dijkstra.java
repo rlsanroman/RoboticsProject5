@@ -50,6 +50,7 @@ public class Dijkstra
 		}
             }
         }
+	System.out.println("HI");
     }
 
     public static List<Vertex> getShortestPathTo(Vertex target)

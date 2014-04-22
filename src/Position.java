@@ -67,6 +67,24 @@ public class Position {
 				}
 			}
 		}
+		/*
+		if(closestRight != null)
+			neighbors.add(closestRight);
+		if(closestLeft != null)
+		neighbors.add(closestLeft);
+		for(Position pos : positions)
+		{
+			if(closestRight != null)
+				if(pos.x == closestRight.x && !pos.equals(closestRight))
+				{
+					neighbors.add(pos);
+				}
+			if(closestLeft != null)
+				if(pos.x == closestLeft.x && !pos.equals(closestLeft))
+				{
+					neighbors.add(pos);
+				}
+		}*/
 		return neighbors;
 	}
 	

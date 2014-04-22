@@ -53,13 +53,8 @@ public class MainWindow extends javax.swing.JFrame {
 		{
 			if(pos.x > 500 || pos.y > 500)
 				continue;
-			if(pos.equals(start))
-				System.out.println("HI");
-			if(pos.equals(end))
-				System.out.println("HI");
 			ArrayList<Position> neighbors = pos.findLeftRightPoints(midpoints);
 			Vertex v = new Vertex(pos);
-			ArrayList<Edge> edges = new ArrayList<Edge>();
 			for(Position neighbor : neighbors)
 			{
 				Vertex v1 = new Vertex(neighbor);
@@ -72,11 +67,11 @@ public class MainWindow extends javax.swing.JFrame {
 				}
 				if(!intersects)
 				{
-					edges.add(new Edge(v1,Position.getDistance(v.point, v1.point)));
+					v.adjacencies.add(new Edge(v1,Position.getDistance(v.point, v1.point)));
+					v1.adjacencies.add(new Edge(v,Position.getDistance(v1.point,v.point)));
 					connections.add(line);
 				}
 			}
-			v.adjacencies = edges;
 			vertices.add(v);
 		}
 	}
