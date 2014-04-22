@@ -6,7 +6,7 @@ import java.util.Collections;
 class Vertex implements Comparable<Vertex>
 {
     public final Point point;
-    public Edge[] adjacencies;
+    public ArrayList<Edge> adjacencies = new ArrayList<Edge>();
     public double minDistance = Double.POSITIVE_INFINITY;
     public Vertex previous;
     public Vertex(Point argName) { point = argName; }
@@ -62,19 +62,13 @@ public class Dijkstra
     }
 
     public static void main(String[] args)
-    {
-    	Point p = new Point(100,100);
-    	Point p1 = new Point(50,50);
-    	Point p2 = new Point(20,20);
-    	
-        Vertex v0 = new Vertex(p);
-        Vertex v1 = new Vertex(p1);
-        Vertex v2 = new Vertex(p2);
+    {	
+        Vertex v0 = new Vertex(new Point (100,100));
+        Vertex v1 = new Vertex(new Point(50,50));
+        Vertex v2 = new Vertex(new Point(20,20));
 
-	v0.adjacencies = new Edge[]{ new Edge(v1, Point.getDistance(v0.point, v1.point)),
-	                             new Edge(v2, Point.getDistance(v0.point, v1.point)) };
-	v1.adjacencies = new Edge[]{ new Edge(v0, Point.getDistance(v1.point, v0.point)),
-	                             new Edge(v2, Point.getDistance(v0.point, v2.point)) };
+        v0.adjacencies.add(new Edge(v1,Point.getDistance(v0.point,v1.point)));
+		v1.adjacencies.add(new Edge(v0,Point.getDistance(v1.point,v0.point)));
 	
 	Vertex[] vertices = { v0, v1};
         computePaths(v0);
