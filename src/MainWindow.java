@@ -104,7 +104,7 @@ public class MainWindow extends javax.swing.JFrame {
 			Line2D left = new Line2D.Float((float)minX, 0, (float)minX, 500);
 			lines.addElement(right);
 			lines.addElement(left);
-			/*
+			
 			//Left Line
 			if(left.intersects(top)) //intersect w top
 				g.drawLine((int)left.getX1(), (int)top.getMaxY() ,(int)left.getX2(), (int)canvasPanel.getSize().getHeight());
@@ -123,7 +123,7 @@ public class MainWindow extends javax.swing.JFrame {
 				g.drawLine((int)right.getX1(),0,(int)right.getX2(),(int)bottom.getMaxY());
 			else
 				g.drawLine((int)right.getX1(),0,(int)right.getX2(),(int)canvasPanel.getSize().getHeight());
-			*/
+			
 		}
 		for(Line2D line : lines)
 		{
