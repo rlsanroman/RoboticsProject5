@@ -10,12 +10,15 @@
  */
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JLabel;
@@ -30,8 +33,10 @@ public class MainWindow extends javax.swing.JFrame {
 	Point start = new Point(0,0), end = new Point(0,0);
 	Rectangle[] rectangles = new Rectangle[3];
 	Vector<Line2D> lines = new Vector<Line2D>();
-	Vector<Point> midpoints = new Vector<Point>();
-	Vector<Rectangle> newRectangles = new Vector<Rectangle>();
+	Vector<Position> midpoints = new Vector<Position>();
+	ArrayList<Vertex> vertices = new ArrayList<Vertex>();
+	ArrayList<Line2D> connections = new ArrayList<Line2D>();
+	Dijkstra dijkstra = new Dijkstra();
     /**
      * Creates new form MainWindow
      */
@@ -42,6 +47,37 @@ public class MainWindow extends javax.swing.JFrame {
         //this.setTitle("Cell Decomposition");
     }
 	
+	public void getAdjacentMidPoints()
+	{
+		vertices.clear();
+		for(Position pos : midpoints)
+		{
+			if(pos.x > 500 || pos.y > 500)
+				continue;
+			ArrayList<Position> neighbors = pos.findLeftRightPoints(midpoints);
+			Vertex v = new Vertex(pos);
+			ArrayList<Edge> edges = new ArrayList<Edge>();
+			for(Position neighbor : neighbors)
+			{
+				Vertex v1 = new Vertex(neighbor);
+				Line2D line = new Line2D.Double(new Point2D.Double(v.point.x,v.point.y), new Point2D.Double((double)v1.point.x,(double)v1.point.y));
+				boolean intersects = false;
+				for(Rectangle rec : this.rectangles)
+				{
+					if(rec.intersectsLine(line))
+						intersects = true;
+				}
+				if(!intersects)
+				{
+					edges.add(new Edge(v1,Position.getDistance(v.point, v1.point)));
+					connections.add(line);
+				}
+			}
+			v.adjacencies = edges;
+			vertices.add(v);
+		}
+	}
+
 	public void drawCells(){
 		Graphics2D g = (Graphics2D) canvasPanel.getGraphics();
 		g.setColor(Color.LIGHT_GRAY);
@@ -66,7 +102,7 @@ public class MainWindow extends javax.swing.JFrame {
 			 double x2 = rectangle.getMinX();
 			 double y2 = rectangle.getMinY();
 			 
-			 midpoints.add(new Point((int)(x1+x2)/2,(int)(y1+y2)/2));
+			 midpoints.add(new Position((int)(x1+x2)/2,(int)(y1+y2)/2));
 
 			 // Left line 2
 			 double x3 = rectangle.getMinX();
@@ -74,7 +110,7 @@ public class MainWindow extends javax.swing.JFrame {
 			 double x4 = rectangle.getMinX();
 			 double y4 = 500;
 			 
-			 midpoints.add(new Point((int)(x3+x4)/2,(int)(y3+y4)/2));
+			 midpoints.add(new Position((int)(x3+x4)/2,(int)(y3+y4)/2));
 			 
 			//Left lines
 			lines.add(new Line2D.Double(x1,0,x2,y2));
@@ -86,7 +122,7 @@ public class MainWindow extends javax.swing.JFrame {
 			 double x6 = rectangle.getMaxX();
 			 double y6 = rectangle.getMinY();
 			 
-			 midpoints.add(new Point((int)(x5+x6)/2,(int)(y5+y6)/2));
+			 midpoints.add(new Position((int)(x5+x6)/2,(int)(y5+y6)/2));
 
 			 // Right line 2
 			 double x7 = rectangle.getMaxX();
@@ -94,7 +130,7 @@ public class MainWindow extends javax.swing.JFrame {
 			 double x8 = rectangle.getMaxX();
 			 double y8 = 500; 
 			 
-			 midpoints.add(new Point((int)(x7+x8)/2,(int)(y7+y8)/2));
+			 midpoints.add(new Position((int)(x7+x8)/2,(int)(y7+y8)/2));
 			 			
 			//Right lines
 			lines.add(new Line2D.Double(x5,y5,x6,y6));
@@ -126,62 +162,51 @@ public class MainWindow extends javax.swing.JFrame {
 			int minX = (int)rectangle.getMinX();
 			int minY = (int)rectangle.getMinY();
 			
-			//System.out.println("Rectangle " + rec++ + ": ");
-			//System.out.println("Max X = " + maxX);
-			//System.out.println("Max Y = " + maxY);
-			//System.out.println("Min X = " + minX);
-			//System.out.println("Min Y = " + minY);
-			
-			//g.drawLine(0,maxY,canvasPanel.getSize().width,maxY); //horizontal
-			//g.drawLine(0,minY,canvasPanel.getSize().width,minY); //horizontal
-			
-			//newRectangles.addElement(new Rectangle(minX,0,minX,canvasPanel.getSize().height)); //Something 
-			//newRectangles.addElement(new Rectangle(minX,0,minX,canvasPanel.getSize().height));
 			g.drawLine(minX,0,minX,canvasPanel.getSize().height); //vertical
 			g.drawLine(maxX,0,maxX,canvasPanel.getSize().height); //vertical
-			
-			
-			
-			//NOT WORKING YET
-//			Line2D right = new Line2D.Float((float)maxX, 0, (float)maxX, 500);
-//			Line2D left = new Line2D.Float((float)minX, 0, (float)minX, 500);
-//			lines.addElement(right);
-//			lines.addElement(left);
-			/*
-			//Left Line
-			if(left.intersects(top)) //intersect w top
-				g.drawLine((int)left.getX1(), (int)top.getMaxY() ,(int)left.getX2(), (int)canvasPanel.getSize().getHeight());
-			else
-				g.drawLine((int)left.getX1(),0,(int)left.getX2(),(int)canvasPanel.getSize().getHeight());
-			if(left.intersects(bottom)) //intersect w bottom
-				g.drawLine((int)left.getX1(),0,(int)left.getX2(),(int)bottom.getMaxY());
-			else
-				g.drawLine((int)left.getX1(),0,(int)left.getX2(),(int)canvasPanel.getSize().getHeight());
-			//Right Line
-			if(right.intersects(top)) //intersect w top
-				g.drawLine((int)right.getX1(), (int)top.getMaxY() ,(int)right.getX2(), (int)canvasPanel.getSize().getHeight());
-			else
-				g.drawLine((int)right.getX1(),0,(int)right.getX2(),(int)canvasPanel.getSize().getHeight());
-			if(right.intersects(bottom)) //intersect w top
-				g.drawLine((int)right.getX1(),0,(int)right.getX2(),(int)bottom.getMaxY());
-			else
-				g.drawLine((int)right.getX1(),0,(int)right.getX2(),(int)canvasPanel.getSize().getHeight());
-			*/
+
 		}
 		for(Line2D line : lines)
 		{
 			System.out.println("Line = " + line);
 		}
+		
 		//draw rectangles on top of lines
 		g.setColor(Color.GRAY);
 		for(Rectangle rectangle : rectangles) 
 		{
 			g.fillRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
 		}
+		System.out.println("MidPoints = " + midpoints);
+		System.out.println("Size = " + midpoints.size());
+		this.getAdjacentMidPoints();
+		this.drawConnections();
+		System.out.println("HERE");
+	}
+	
+	public void drawConnections()
+	{
+		Graphics2D g = (Graphics2D) canvasPanel.getGraphics();
+		for(Line2D line : connections)
+		{
+			g.drawLine((int)line.getX1(),(int)line.getY1(),(int)line.getX2(),(int)line.getY2());
+		}
 	}
 	
 	public void drawPath(){
 		//actually calculate the best path to end point here.
+		Vertex source = null;
+		Vertex dest = null;
+		for(Vertex vertex : vertices)
+		{
+			if(vertex.point.equals(start))
+				source = vertex;
+			if(vertex.point.equals(end))
+				dest = vertex;
+		}
+		Dijkstra.computePaths(source);
+		List<Vertex> path = dijkstra.getShortestPathTo(dest);
+		System.out.println("Path = " + path);
 	}
 	
     private class mouseEvent 
@@ -257,19 +282,23 @@ public class MainWindow extends javax.swing.JFrame {
 			            	else{
 					    		g.setColor(Color.GREEN);
 					    		g.drawOval(mouseX,mouseY,r,r);
-					    		g.fillOval(mouseX,mouseY,r,r);					    		
+					    		g.fillOval(mouseX,mouseY,r,r);
+					    		midpoints.add(new Position(start.x,start.y));
 			            	}
 				    		break;
 			            case 1:
 				    		//draw end point
 			            	end.setLocation(mouseX,mouseY);
+			            	getAdjacentMidPoints();
 			            	if (rectangles[2].contains(end) || rectangles[1].contains(end) || rectangles[0].contains(end)){
 			            		numRightClicks--;
 			            	}
+			            	
 			            	else{
 					    		g.setColor(Color.RED);
 					    		g.drawOval(mouseX,mouseY,r,r);
-					    		g.fillOval(mouseX,mouseY,r,r);					    		
+					    		g.fillOval(mouseX,mouseY,r,r);
+					    		midpoints.add(new Position(end.x,end.y));
 			            	}
 				    		break;
 				    	default:
@@ -280,6 +309,7 @@ public class MainWindow extends javax.swing.JFrame {
 		    }
 		    
 			if(numRightClicks >= 2 && numLeftClicks >= 3){
+				drawConnections();
 				drawPath();
 			}
 		}
