@@ -66,16 +66,21 @@ public class Dijkstra
         Vertex v0 = new Vertex(new Point (100,100));
         Vertex v1 = new Vertex(new Point(50,50));
         Vertex v2 = new Vertex(new Point(20,20));
+        Vertex v3 = new Vertex(new Point(30,30));
 
         v0.adjacencies.add(new Edge(v1,Point.getDistance(v0.point,v1.point)));
+        v0.adjacencies.add(new Edge(v3,Point.getDistance(v0.point,v3.point)));
 		v1.adjacencies.add(new Edge(v0,Point.getDistance(v1.point,v0.point)));
+		v1.adjacencies.add(new Edge(v2,Point.getDistance(v1.point,v2.point)));
+		v2.adjacencies.add(new Edge(v1,Point.getDistance(v2.point,v1.point)));
+		v3.adjacencies.add(new Edge(v0,Point.getDistance(v3.point,v0.point)));
 	
 	Vertex[] vertices = { v0, v1};
         computePaths(v0);
         for (Vertex v : vertices)
 	{
 	    System.out.println("Distance to " + v + ": " + v.minDistance);
-	    List<Vertex> path = getShortestPathTo(v);
+	    List<Vertex> path = getShortestPathTo(v3);
 	    System.out.println("Path: " + path);
 	}
     }
