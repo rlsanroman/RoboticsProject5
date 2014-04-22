@@ -63,7 +63,7 @@ public class Dijkstra
 
     public static void main(String[] args)
     {	
-        Vertex v0 = new Vertex(new Point (100,100));
+        Vertex v0 = new Vertex(new Point(100,100));
         Vertex v1 = new Vertex(new Point(50,50));
         Vertex v2 = new Vertex(new Point(20,20));
         Vertex v3 = new Vertex(new Point(30,30));
