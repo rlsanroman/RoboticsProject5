@@ -9,19 +9,17 @@
  * @author rosbelsanroman
  */
 
-import java.awt.Frame;
-import java.awt.Graphics2D;
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Line2D;
+import java.util.Vector;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-import java.awt.Rectangle;
-import java.util.Vector;
 
 public class MainWindow extends javax.swing.JFrame {
 
@@ -32,6 +30,7 @@ public class MainWindow extends javax.swing.JFrame {
 	Point start = new Point(0,0), end = new Point(0,0);
 	Rectangle[] rectangles = new Rectangle[3];
 	Vector<Line2D> lines = new Vector<Line2D>();
+	Vector<Point> midpoints = new Vector<Point>();
 	Vector<Rectangle> newRectangles = new Vector<Rectangle>();
     /**
      * Creates new form MainWindow
@@ -60,6 +59,46 @@ public class MainWindow extends javax.swing.JFrame {
 			int maxY = (int)rectangle.getMaxY();
 			int minX = (int)rectangle.getMinX();
 			int minY = (int)rectangle.getMinY();
+			
+			// Left line 1
+			 double x1 = rectangle.getMinX();
+			 double y1 = 0;
+			 double x2 = rectangle.getMinX();
+			 double y2 = rectangle.getMinY();
+			 
+			 midpoints.add(new Point((int)(x1+x2)/2,(int)(y1+y2)/2));
+
+			 // Left line 2
+			 double x3 = rectangle.getMinX();
+			 double y3 = rectangle.getMaxY();
+			 double x4 = rectangle.getMinX();
+			 double y4 = 500;
+			 
+			 midpoints.add(new Point((int)(x3+x4)/2,(int)(y3+y4)/2));
+			 
+			//Left lines
+			lines.add(new Line2D.Double(x1,0,x2,y2));
+			lines.add(new Line2D.Double(x3,y3,x4,y4));
+			 
+			// Right line 1
+			 double x5 = rectangle.getMaxX();
+			 double y5 = 0;
+			 double x6 = rectangle.getMaxX();
+			 double y6 = rectangle.getMinY();
+			 
+			 midpoints.add(new Point((int)(x5+x6)/2,(int)(y5+y6)/2));
+
+			 // Right line 2
+			 double x7 = rectangle.getMaxX();
+			 double y7 = rectangle.getMaxY();
+			 double x8 = rectangle.getMaxX();
+			 double y8 = 500; 
+			 
+			 midpoints.add(new Point((int)(x7+x8)/2,(int)(y7+y8)/2));
+			 			
+			//Right lines
+			lines.add(new Line2D.Double(x5,y5,x6,y6));
+			lines.add(new Line2D.Double(x7,y7,x8,y8));
 			
 			if(maxX > MAXX) 
 			{
@@ -104,10 +143,10 @@ public class MainWindow extends javax.swing.JFrame {
 			
 			
 			//NOT WORKING YET
-			Line2D right = new Line2D.Float((float)maxX, 0, (float)maxX, 500);
-			Line2D left = new Line2D.Float((float)minX, 0, (float)minX, 500);
-			lines.addElement(right);
-			lines.addElement(left);
+//			Line2D right = new Line2D.Float((float)maxX, 0, (float)maxX, 500);
+//			Line2D left = new Line2D.Float((float)minX, 0, (float)minX, 500);
+//			lines.addElement(right);
+//			lines.addElement(left);
 			/*
 			//Left Line
 			if(left.intersects(top)) //intersect w top
